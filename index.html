@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>GIPHY search</title>
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>  -->
+
+</head>
+
+<body>
+  <div id="buttons">
+    <button data-emotion="Happy">
+      Happy
+    </button>
+    <button data-emotion="Sad">
+      Sad
+    </button>
+    <button data-emotion="Stressed">
+      Stressed
+    </button>
+    <button data-emotion="Laughing">
+      LOL
+    </button>
+    <button data-emotion="Sorry">
+      Sorry
+    </button>
+    <button data-emotion="Mind Blown">
+      Mind Blown
+    </button>
+  </div>
+  <br>
+  <form class="form-inline mr-auto">
+    <input class="form-control mr-sm-2" type="text" placeholder="Search..." aria-label="Search" id="search-box">
+    <button class="btn blue-gradient btn-rounded btn-sm my-0" type="submitt" id="submit">Submit</button>
+  </form>
+  <br>
+  <div id="gifs-show-here">
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script type="text/javascript">
+    //Event listener for all button elements
+    $("#submit").on("click", function () {
+      then($("#buttons").text());
+    })
+
+    $("button").on("click", function () {
+      var emotion = $(this).attr("data-emotion");
+      var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+        emotion + "&api_key=BkaUZZWcFij6J7AoQj3WtPb1R2p9O6V9&limit=10";
+      //Performing our AJAX GET request
+      $.ajax({
+        url: queryURL,
+        method: "GET"
+      })
+        //After the data comes back from the API
+        .then(function (response) {
+          var results = response.data;
+
+          for (var i = 0; i < results.length; i++) {
+            var gifDiv = $("<div>");
+
+            var rating = results[i].rating;
+
+            var p = $("<p>").text("Rating: " + rating);
+
+            var emotionImage = $("<img>");
+            emotionImage.attr("src", results[i].images.fixed_height.url);
+
+            gifDiv.prepend(p);
+            gifDiv.prepend(emotionImage);
+
+            $("#gifs-show-here").prepend(gifDiv);
+          }
+        });
+    });
+
+    $("#submit").on("click", function () {
+      var search = ("#search-box").val().trim();
+      var newButton = $("<button>");
+
+
+      // newButton.attr("id", "button-");
+      $("#buttons").text(search);
+    })
+
+    $.ajax({
+
+      url: queryURL,
+      method: "GET"
+
+    }).then(function (response) {
+
+      var newButton = $("<button>");
+      newButton.append(search);
+      $("#buttons").append(newButton);
+
+    });
+  </script>
+</body>
+
+</html>
